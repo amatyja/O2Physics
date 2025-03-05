@@ -1637,7 +1637,7 @@ struct TauTau13topo {
     // auto const electronMass = pdg->Mass(11); // 11 kElectron
     auto const pionMass = MassPiPlus;
     auto const electronMass = MassElectron;
-    
+
     // TParticlePDG* pion = pdg->GetParticle(211);
     // TParticlePDG* electron = pdg->GetParticle(11);
     bool flagGlobalCheck = true;
@@ -2880,7 +2880,7 @@ struct TauTau13topo {
             } // end of pion check
             // electron from tau
             if (std::abs(daughter.pdgCode()) == 11) { // == 11
-              if (daughter.pdgCode() == 11) // 11
+              if (daughter.pdgCode() == 11)           // 11
                 flagElPlusElMinus = true;
               registryMC.get<TH1>(HIST("electronMC/hMCeta"))->Fill(daughter.eta());
               registryMC.get<TH1>(HIST("electronMC/hMCphi"))->Fill(daughter.phi());
@@ -3003,8 +3003,7 @@ struct TauTau13topo {
   void processEfficiencyMCSG(aod::UDMcCollision const& mcCollision,
                              soa::SmallGroups<soa::Join<aod::UDMcCollsLabels, aod::UDCollisions, aod::UDCollisionsSels, aod::SGCollisions, aod::UDZdcsReduced>> const& collisions,
                              LabeledTracks const& tracks,
-                             aod::UDMcParticles const& mcParticles
-  )
+                             aod::UDMcParticles const& mcParticles)
   {
     if (verbose) {
       LOGF(info, "<tautau13topo_MC> GeneratorIDtot %d", mcCollision.generatorsID());
@@ -3312,7 +3311,7 @@ struct TauTau13topo {
         for (auto const& track : groupedTracks) {
           // all tracks
           if (track.has_udMcParticle()) {
-	    //
+            //
           } else {
             // ghost track
             nGhostTracks++;
