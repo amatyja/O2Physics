@@ -121,7 +121,7 @@ DECLARE_SOA_TABLE(TauFourTracks, "AOD", "TAUFOURTRACK",
                   tau_tree::TotalFT0AmplitudeA, tau_tree::TotalFT0AmplitudeC, tau_tree::TotalFV0AmplitudeA,
                   // tau_tree::TimeFT0A, tau_tree::TimeFT0C, tau_tree::TimeFV0A,
                   tau_tree::TrkPx, tau_tree::TrkPy, tau_tree::TrkPz,
-		  tau_tree::TrkSign,
+                  tau_tree::TrkSign,
                   tau_tree::TrkDCAxy, tau_tree::TrkDCAz,
                   tau_tree::TrkTPCcr,
                   tau_tree::TrkTPCfind, tau_tree::TrkTPCchi2, tau_tree::TrkITSchi2, tau_tree::TrkITScl,
@@ -3346,7 +3346,7 @@ struct TauTau13topo {
     // loop over MC particles
     for (const auto& mcParticle : mcParticles) {
       if (verbose) {
-	LOGF(info, "<processSimpleMCSG> mcParticle pdg %d, gen %d, prim %d",  mcParticle.pdgCode(), mcParticle.producedByGenerator(), mcParticle.isPhysicalPrimary() );
+        LOGF(info, "<processSimpleMCSG> mcParticle pdg %d, gen %d, prim %d", mcParticle.pdgCode(), mcParticle.producedByGenerator(), mcParticle.isPhysicalPrimary());
       }
       // primaries
       // if (mcParticle.isPhysicalPrimary()) {
@@ -3358,7 +3358,7 @@ struct TauTau13topo {
       if (mcParticle.producedByGenerator()) {
         countGen++;
         if (mcParticle.isPhysicalPrimary()) {
-	countBoth++;
+          countBoth++;
           // if (mcParticle.pdgCode() != 22 && std::abs(mcParticle.pdgCode()) != 12 && std::abs(mcParticle.pdgCode()) != 14 && std::abs(mcParticle.pdgCode()) != 16 && mcParticle.pdgCode() != 130 && mcParticle.pdgCode() != 111) {
           if (mcParticle.pdgCode() != kGamma && std::abs(mcParticle.pdgCode()) != kNuE && std::abs(mcParticle.pdgCode()) != kNuMu && std::abs(mcParticle.pdgCode()) != kNuTau && mcParticle.pdgCode() != kK0Long && mcParticle.pdgCode() != kPi0) {
             countCharged++;
@@ -3376,7 +3376,7 @@ struct TauTau13topo {
               } // mother is tau
             } // mc particle has mother
           } // veto neutral particles
-	} // physics primary
+        } // physics primary
       } // generator produced by
 
       //
@@ -3550,7 +3550,7 @@ struct TauTau13topo {
     // LOGF(info, "<tautau13topo_MC> Per DF: UDMcParticles size %d, UDMcCollisions size %d, FullMcUdCollisions size %d",  mcParts.size(), mcCollisions.size(), collisionsFull.size());
     // LOGF(info, "<tautau13topo_MC> Per DF: UDMcParticles size %d, UDMcCollisions size %d, FullMcUdCollisions size %d",  mcParts.size(), mcCollisions.size(), collisions.size());
     LOGF(info, "<tautau13topo_MCSG> UDMcCollision size %d, SmallGroups FullMcUdCollisions size %d, UDtracks %d, UDMcParticles %d", mcCollision.size(), collisions.size(), tracks.size(), mcParticles.size());
-    
+
     // loop over generated collisions
     // for (const auto &mcCollision : mcCollisions) {
     // LOGF(info, "<tautau13topo_MC> Per mcCollision not sliced: UDMcParticles size %d, FullMcUdCollisions size %d",  mcParts.size(), collisionsFull.size());
