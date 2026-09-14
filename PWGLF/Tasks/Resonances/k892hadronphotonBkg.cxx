@@ -249,6 +249,7 @@ struct k892hadronphotonBkg {
     ConfigurableAxis axisAPAlpha{"axisAPAlpha", {220, -1.1f, 1.1f}, "Resonance AP alpha (#gamma = positive leg)"};
     ConfigurableAxis axisAPQt{"axisAPQt", {220, 0.0f, 1.1f}, "Resonance AP q_{T} (GeV/c)"};
     ConfigurableAxis axisCandSel{"axisCandSel", {15, 0.5f, +15.5f}, "Candidate Selection"};
+    ConfigurableAxis axisOPAngle{"axisOPAngle", {140, 0.0f, 7.0f}, "Opening angle (rad)"};
   } axisConfig;
 
   void init(InitContext const&)
@@ -315,19 +316,17 @@ struct k892hadronphotonBkg {
     if (kstarBkgConfig.doSameEvtRotation) {
       histos.add("KStarBkg/h2dRotKStarMassVsPt", "h2dRotKStarMassVsPt", kTH2D, {axisConfig.axisKStarMass, axisConfig.axisPt});
       histos.add("KStarBkg/h3dRotKStarMassVsPt", "h3dRotKStarMassVsPt", kTH3D, {axisConfig.axisCentrality, axisConfig.axisPt, axisConfig.axisKStarMass});
-      histos.add("KStarBkg/h3dRotKStarPtVsOPAngle", "h3dRotKStarPtVsOPAngle", kTH3D, {{140, 0.f, 7.f}, axisConfig.axisPt, axisConfig.axisKStarMass});
+      histos.add("KStarBkg/h3dRotKStarPtVsOPAngle", "h3dRotKStarPtVsOPAngle", kTH3D, {axisConfig.axisOPAngle, axisConfig.axisPt, axisConfig.axisKStarMass});
       if (doArm) {
-        histos.add("KStarBkg/h3dRotKStarPtVsAPAlpha", "h3dRotKStarPtVsAPAlpha", kTH3D, {axisConfig.axisAPAlpha, axisConfig.axisPt, axisConfig.axisKStarMass});
-        histos.add("KStarBkg/h3dRotKStarPtVsAPQt", "h3dRotKStarPtVsAPQt", kTH3D, {axisConfig.axisAPQt, axisConfig.axisPt, axisConfig.axisKStarMass});
+        histos.add("KStarBkg/h4dRotKStarPtVsAPAlphaVsAPQt", "h4dRotKStarPtVsAPAlphaVsAPQt", kTHnD, {axisConfig.axisAPAlpha, axisConfig.axisAPQt, axisConfig.axisPt, axisConfig.axisKStarMass});
       }
     }
     if (kstarBkgConfig.doEvtMixing) {
       histos.add("KStarBkg/h2dMixedKStarMassVsPt", "h2dMixedKStarMassVsPt", kTH2D, {axisConfig.axisKStarMass, axisConfig.axisPt});
       histos.add("KStarBkg/h3dMixedKStarMassVsPt", "h3dMixedKStarMassVsPt", kTH3D, {axisConfig.axisCentrality, axisConfig.axisPt, axisConfig.axisKStarMass});
-      histos.add("KStarBkg/h3dMixedKStarPtVsOPAngle", "h3dMixedKStarPtVsOPAngle", kTH3D, {{140, 0.f, 7.f}, axisConfig.axisPt, axisConfig.axisKStarMass});
+      histos.add("KStarBkg/h3dMixedKStarPtVsOPAngle", "h3dMixedKStarPtVsOPAngle", kTH3D, {axisConfig.axisOPAngle, axisConfig.axisPt, axisConfig.axisKStarMass});
       if (doArm) {
-        histos.add("KStarBkg/h3dMixedKStarPtVsAPAlpha", "h3dMixedKStarPtVsAPAlpha", kTH3D, {axisConfig.axisAPAlpha, axisConfig.axisPt, axisConfig.axisKStarMass});
-        histos.add("KStarBkg/h3dMixedKStarPtVsAPQt", "h3dMixedKStarPtVsAPQt", kTH3D, {axisConfig.axisAPQt, axisConfig.axisPt, axisConfig.axisKStarMass});
+        histos.add("KStarBkg/h4dMixedKStarPtVsAPAlphaVsAPQt", "h4dMixedKStarPtVsAPAlphaVsAPQt", kTHnD, {axisConfig.axisAPAlpha, axisConfig.axisAPQt, axisConfig.axisPt, axisConfig.axisKStarMass});
       }
     }
 
@@ -339,19 +338,17 @@ struct k892hadronphotonBkg {
     if (lstarBkgConfig.doSameEvtRotation) {
       histos.add("LambdaStarBkg/h2dRotLambdaStarMassVsPt", "h2dRotLambdaStarMassVsPt", kTH2D, {axisConfig.axisLambdaStarMass, axisConfig.axisPt});
       histos.add("LambdaStarBkg/h3dRotLambdaStarMassVsPt", "h3dRotLambdaStarMassVsPt", kTH3D, {axisConfig.axisCentrality, axisConfig.axisPt, axisConfig.axisLambdaStarMass});
-      histos.add("LambdaStarBkg/h3dRotLambdaStarPtVsOPAngle", "h3dRotLambdaStarPtVsOPAngle", kTH3D, {{140, 0.f, 7.f}, axisConfig.axisPt, axisConfig.axisLambdaStarMass});
+      histos.add("LambdaStarBkg/h3dRotLambdaStarPtVsOPAngle", "h3dRotLambdaStarPtVsOPAngle", kTH3D, {axisConfig.axisOPAngle, axisConfig.axisPt, axisConfig.axisLambdaStarMass});
       if (doArm) {
-        histos.add("LambdaStarBkg/h3dRotLambdaStarPtVsAPAlpha", "h3dRotLambdaStarPtVsAPAlpha", kTH3D, {axisConfig.axisAPAlpha, axisConfig.axisPt, axisConfig.axisLambdaStarMass});
-        histos.add("LambdaStarBkg/h3dRotLambdaStarPtVsAPQt", "h3dRotLambdaStarPtVsAPQt", kTH3D, {axisConfig.axisAPQt, axisConfig.axisPt, axisConfig.axisLambdaStarMass});
+        histos.add("LambdaStarBkg/h4dRotLambdaStarPtVsAPAlphaVsAPQt", "h4dRotLambdaStarPtVsAPAlphaVsAPQt", kTHnD, {axisConfig.axisAPAlpha, axisConfig.axisAPQt, axisConfig.axisPt, axisConfig.axisLambdaStarMass});
       }
     }
     if (lstarBkgConfig.doEvtMixing) {
       histos.add("LambdaStarBkg/h2dMixedLambdaStarMassVsPt", "h2dMixedLambdaStarMassVsPt", kTH2D, {axisConfig.axisLambdaStarMass, axisConfig.axisPt});
       histos.add("LambdaStarBkg/h3dMixedLambdaStarMassVsPt", "h3dMixedLambdaStarMassVsPt", kTH3D, {axisConfig.axisCentrality, axisConfig.axisPt, axisConfig.axisLambdaStarMass});
-      histos.add("LambdaStarBkg/h3dMixedLambdaStarPtVsOPAngle", "h3dMixedLambdaStarPtVsOPAngle", kTH3D, {{140, 0.f, 7.f}, axisConfig.axisPt, axisConfig.axisLambdaStarMass});
+      histos.add("LambdaStarBkg/h3dMixedLambdaStarPtVsOPAngle", "h3dMixedLambdaStarPtVsOPAngle", kTH3D, {axisConfig.axisOPAngle, axisConfig.axisPt, axisConfig.axisLambdaStarMass});
       if (doArm) {
-        histos.add("LambdaStarBkg/h3dMixedLambdaStarPtVsAPAlpha", "h3dMixedLambdaStarPtVsAPAlpha", kTH3D, {axisConfig.axisAPAlpha, axisConfig.axisPt, axisConfig.axisLambdaStarMass});
-        histos.add("LambdaStarBkg/h3dMixedLambdaStarPtVsAPQt", "h3dMixedLambdaStarPtVsAPQt", kTH3D, {axisConfig.axisAPQt, axisConfig.axisPt, axisConfig.axisLambdaStarMass});
+        histos.add("LambdaStarBkg/h4dMixedLambdaStarPtVsAPAlphaVsAPQt", "h4dMixedLambdaStarPtVsAPAlphaVsAPQt", kTHnD, {axisConfig.axisAPAlpha, axisConfig.axisAPQt, axisConfig.axisPt, axisConfig.axisLambdaStarMass});
       }
     }
   }
@@ -868,16 +865,14 @@ struct k892hadronphotonBkg {
             histos.fill(HIST("KStarBkg/h3dRotKStarMassVsPt"), centrality, reso.Pt(), reso.M());
             histos.fill(HIST("KStarBkg/h3dRotKStarPtVsOPAngle"), openAngle, reso.Pt(), reso.M());
             if (doArm) {
-              histos.fill(HIST("KStarBkg/h3dRotKStarPtVsAPAlpha"), apAlpha, reso.Pt(), reso.M());
-              histos.fill(HIST("KStarBkg/h3dRotKStarPtVsAPQt"), apQt, reso.Pt(), reso.M());
+              histos.fill(HIST("KStarBkg/h4dRotKStarPtVsAPAlphaVsAPQt"), apAlpha, apQt, reso.Pt(), reso.M());
             }
           } else {
             histos.fill(HIST("LambdaStarBkg/h2dRotLambdaStarMassVsPt"), reso.M(), reso.Pt());
             histos.fill(HIST("LambdaStarBkg/h3dRotLambdaStarMassVsPt"), centrality, reso.Pt(), reso.M());
             histos.fill(HIST("LambdaStarBkg/h3dRotLambdaStarPtVsOPAngle"), openAngle, reso.Pt(), reso.M());
             if (doArm) {
-              histos.fill(HIST("LambdaStarBkg/h3dRotLambdaStarPtVsAPAlpha"), apAlpha, reso.Pt(), reso.M());
-              histos.fill(HIST("LambdaStarBkg/h3dRotLambdaStarPtVsAPQt"), apQt, reso.Pt(), reso.M());
+              histos.fill(HIST("LambdaStarBkg/h4dRotLambdaStarPtVsAPAlphaVsAPQt"), apAlpha, apQt, reso.Pt(), reso.M());
             }
           }
         }
@@ -947,16 +942,14 @@ struct k892hadronphotonBkg {
           histos.fill(HIST("KStarBkg/h3dMixedKStarMassVsPt"), centrality, pt, mass);
           histos.fill(HIST("KStarBkg/h3dMixedKStarPtVsOPAngle"), openAngle, pt, mass);
           if (doArm) {
-            histos.fill(HIST("KStarBkg/h3dMixedKStarPtVsAPAlpha"), apAlpha, pt, mass);
-            histos.fill(HIST("KStarBkg/h3dMixedKStarPtVsAPQt"), apQt, pt, mass);
+            histos.fill(HIST("KStarBkg/h4dMixedKStarPtVsAPAlphaVsAPQt"), apAlpha, apQt, pt, mass);
           }
         } else {
           histos.fill(HIST("LambdaStarBkg/h2dMixedLambdaStarMassVsPt"), mass, pt);
           histos.fill(HIST("LambdaStarBkg/h3dMixedLambdaStarMassVsPt"), centrality, pt, mass);
           histos.fill(HIST("LambdaStarBkg/h3dMixedLambdaStarPtVsOPAngle"), openAngle, pt, mass);
           if (doArm) {
-            histos.fill(HIST("LambdaStarBkg/h3dMixedLambdaStarPtVsAPAlpha"), apAlpha, pt, mass);
-            histos.fill(HIST("LambdaStarBkg/h3dMixedLambdaStarPtVsAPQt"), apQt, pt, mass);
+            histos.fill(HIST("LambdaStarBkg/h4dMixedLambdaStarPtVsAPAlphaVsAPQt"), apAlpha, apQt, pt, mass);
           }
         }
       }

@@ -293,6 +293,7 @@ struct sigmaanalysis {
   ConfigurableAxis axisPsiPair{"axisPsiPair", {250, -5.0f, 5.0f}, "Psipair for photons"};
   ConfigurableAxis axisPhi{"axisPhi", {200, 0, 2 * o2::constants::math::PI}, "Phi for photons"};
   ConfigurableAxis axisZ{"axisZ", {120, -120.0f, 120.0f}, "V0 Z position (cm)"};
+  ConfigurableAxis axisOPAngle{"axisOPAngle", {140, 0.0f, 7.0f}, "Opening angle (rad)"};
 
   // EMCal-specifc
   ConfigurableAxis axisClrDefinition{"axisClrDefinition", {51, -0.5, 50.5}, "Cluster Definition"};
@@ -350,6 +351,19 @@ struct sigmaanalysis {
     }
     histos.get<TH1>(HIST("hEventSelection"))->GetXaxis()->SetBinLabel(19, "Below min IR");
     histos.get<TH1>(HIST("hEventSelection"))->GetXaxis()->SetBinLabel(20, "Above max IR");
+
+    //
+    if (doprocessAnalysedCollisions) {
+      histos.add("hEventPreSelection", "hEventPreSelection", kTH1D, {{8, -0.5f, +7.5f}});
+      histos.get<TH1>(HIST("hEventPreSelection"))->GetXaxis()->SetBinLabel(1, "All collisions");
+      histos.get<TH1>(HIST("hEventPreSelection"))->GetXaxis()->SetBinLabel(2, "kIsTriggerTVX");
+      histos.get<TH1>(HIST("hEventPreSelection"))->GetXaxis()->SetBinLabel(3, "kNoITSROFrameBorder");
+      histos.get<TH1>(HIST("hEventPreSelection"))->GetXaxis()->SetBinLabel(4, "kNoTimeFrameBorder");
+      histos.get<TH1>(HIST("hEventPreSelection"))->GetXaxis()->SetBinLabel(5, "posZ cut");
+      histos.get<TH1>(HIST("hEventPreSelection"))->GetXaxis()->SetBinLabel(6, "kNoSameBunchPileup");
+      histos.get<TH1>(HIST("hEventPreSelection"))->GetXaxis()->SetBinLabel(7, "RCT flags");
+      histos.get<TH1>(HIST("hEventPreSelection"))->GetXaxis()->SetBinLabel(8, "Preselected collisions");
+    }
 
     if (fGetIR) {
       histos.add("GeneralQA/hRunNumberNegativeIR", "", kTH1D, {{1, 0., 1.}});
@@ -443,10 +457,9 @@ struct sigmaanalysis {
         histos.add(histodir + "/Sigma0/h2dRadiusVspT", "h2dRadiusVspT", kTH2D, {axisV0PairRadius, axisPt});
         histos.add(histodir + "/Sigma0/hDCAPairDau", "hDCAPairDau", kTH1D, {axisDCAdau});
         histos.add(histodir + "/Sigma0/h3dMass", "h3dMass", kTH3D, {axisCentrality, axisPt, axisSigmaMass});
-        histos.add(histodir + "/Sigma0/h3dOPAngleVsMass", "h3dOPAngleVsMass", kTH3D, {{140, 0.0f, +7.0f}, axisPt, axisSigmaMass});
+        histos.add(histodir + "/Sigma0/h3dOPAngleVsMass", "h3dOPAngleVsMass", kTH3D, {axisOPAngle, axisPt, axisSigmaMass});
         if (doArm) {
-          histos.add(histodir + "/Sigma0/h3dAlphaVsMass", "h3dAlphaVsMass", kTH3D, {{100, -5.0f, +5.0f}, axisPt, axisSigmaMass});
-          histos.add(histodir + "/Sigma0/h3dQtarmVsMass", "h3dQtarmVsMass", kTH3D, {{100, -5.0f, +5.0f}, axisPt, axisSigmaMass});
+          histos.add(histodir + "/Sigma0/h4dAlphaVsQtarmVsMass", "h4dAlphaVsQtarmVsMass", kTHnD, {axisAPAlpha, axisAPQt, axisPt, axisSigmaMass});
         }
 
         histos.add(histodir + "/ASigma0/hMass", "hMass", kTH1D, {axisSigmaMass});
@@ -456,10 +469,9 @@ struct sigmaanalysis {
         histos.add(histodir + "/ASigma0/h2dRadiusVspT", "h2dRadiusVspT", kTH2D, {axisV0PairRadius, axisPt});
         histos.add(histodir + "/ASigma0/hDCAPairDau", "hDCAPairDau", kTH1D, {axisDCAdau});
         histos.add(histodir + "/ASigma0/h3dMass", "h3dMass", kTH3D, {axisCentrality, axisPt, axisSigmaMass});
-        histos.add(histodir + "/ASigma0/h3dOPAngleVsMass", "h3dOPAngleVsMass", kTH3D, {{140, 0.0f, +7.0f}, axisPt, axisSigmaMass});
+        histos.add(histodir + "/ASigma0/h3dOPAngleVsMass", "h3dOPAngleVsMass", kTH3D, {axisOPAngle, axisPt, axisSigmaMass});
         if (doArm) {
-          histos.add(histodir + "/ASigma0/h3dAlphaVsMass", "h3dAlphaVsMass", kTH3D, {{100, -5.0f, +5.0f}, axisPt, axisSigmaMass});
-          histos.add(histodir + "/ASigma0/h3dQtarmVsMass", "h3dQtarmVsMass", kTH3D, {{100, -5.0f, +5.0f}, axisPt, axisSigmaMass});
+          histos.add(histodir + "/ASigma0/h4dAlphaVsQtarmVsMass", "h4dAlphaVsQtarmVsMass", kTHnD, {axisAPAlpha, axisAPQt, axisPt, axisSigmaMass});
         }
 
         // Process MC
@@ -500,8 +512,7 @@ struct sigmaanalysis {
           histos.add(histodir + "/MC/Sigma0/h3dMass", "h3dMass", kTH3D, {axisCentrality, axisPt, axisSigmaMass});
           histos.add(histodir + "/MC/Sigma0/h3dMCProcess", "h3dMCProcess", kTH3D, {{50, -0.5f, 49.5f}, axisPt, axisSigmaMass});
           if (doArm) {
-            histos.add(histodir + "/MC/Sigma0/h3dAlphaVsMass", "h3dAlphaVsMass", kTH3D, {{100, -5.0f, +5.0f}, axisPt, axisSigmaMass});
-            histos.add(histodir + "/MC/Sigma0/h3dQtarmVsMass", "h3dQtarmVsMass", kTH3D, {{100, -5.0f, +5.0f}, axisPt, axisSigmaMass});
+            histos.add(histodir + "/MC/Sigma0/h4dAlphaVsQtarmVsMass", "h4dAlphaVsQtarmVsMass", kTHnD, {axisAPAlpha, axisAPQt, axisPt, axisSigmaMass});
           }
 
           histos.add(histodir + "/MC/ASigma0/hPt", "hPt", kTH1D, {axisPt});
@@ -515,8 +526,7 @@ struct sigmaanalysis {
           histos.add(histodir + "/MC/ASigma0/h3dMass", "h3dMass", kTH3D, {axisCentrality, axisPt, axisSigmaMass});
           histos.add(histodir + "/MC/ASigma0/h3dMCProcess", "h3dMCProcess", kTH3D, {{50, -0.5f, 49.5f}, axisPt, axisSigmaMass});
           if (doArm) {
-            histos.add(histodir + "/MC/ASigma0/h3dAlphaVsMass", "h3dAlphaVsMass", kTH3D, {{100, -5.0f, +5.0f}, axisPt, axisSigmaMass});
-            histos.add(histodir + "/MC/ASigma0/h3dQtarmVsMass", "h3dQtarmVsMass", kTH3D, {{100, -5.0f, +5.0f}, axisPt, axisSigmaMass});
+            histos.add(histodir + "/MC/ASigma0/h4dAlphaVsQtarmVsMass", "h4dAlphaVsQtarmVsMass", kTHnD, {axisAPAlpha, axisAPQt, axisPt, axisSigmaMass});
           }
 
           histos.add(histodir + "/MC/LambdaStar/h3dMCPtvsOPAngle_Sig", "h3dMCPtvsOPAngle_Sig", kTH3D, {{140, 0.f, 7.f}, axisPt, axisSigmaMass});
@@ -1199,6 +1209,8 @@ struct sigmaanalysis {
 
     //_______________________________________
     // Sigmas and Lambdas
+    float rapidity = doLambdaStar ? sigma.lambdaStarY() : sigma.sigma0Y();
+
     if (sigma.lambdaAlpha() > 0) {
       if (fillSelhistos) {
         histos.fill(HIST(MainDir[mode]) + HIST("/Lambda/h2dTPCvsTOFNSigma_LambdaPr"), sigma.lambdaPosPrTPCNSigma(), sigma.lambdaPrTOFNSigma());
@@ -1212,15 +1224,14 @@ struct sigmaanalysis {
 
       histos.fill(HIST(MainDir[mode]) + HIST("/Sigma0/hMass"), sigma.sigma0Mass());
       histos.fill(HIST(MainDir[mode]) + HIST("/Sigma0/hPt"), sigma.pt());
-      histos.fill(HIST(MainDir[mode]) + HIST("/Sigma0/hY"), sigma.sigma0Y());
+      histos.fill(HIST(MainDir[mode]) + HIST("/Sigma0/hY"), rapidity);
       histos.fill(HIST(MainDir[mode]) + HIST("/Sigma0/hRadius"), sigma.radius());
       histos.fill(HIST(MainDir[mode]) + HIST("/Sigma0/h2dRadiusVspT"), sigma.radius(), sigma.pt());
       histos.fill(HIST(MainDir[mode]) + HIST("/Sigma0/hDCAPairDau"), sigma.dcadaughters());
       histos.fill(HIST(MainDir[mode]) + HIST("/Sigma0/h3dMass"), centrality, sigma.pt(), sigma.sigma0Mass());
       histos.fill(HIST(MainDir[mode]) + HIST("/Sigma0/h3dOPAngleVsMass"), sigma.opAngle(), sigma.pt(), sigma.sigma0Mass());
       if (doArm) {
-        histos.fill(HIST(MainDir[mode]) + HIST("/Sigma0/h3dAlphaVsMass"), sigma.lStarAlpha(), sigma.pt(), sigma.sigma0Mass());
-        histos.fill(HIST(MainDir[mode]) + HIST("/Sigma0/h3dQtarmVsMass"), sigma.lStarQtarm(), sigma.pt(), sigma.sigma0Mass());
+        histos.fill(HIST(MainDir[mode]) + HIST("/Sigma0/h4dAlphaVsQtarmVsMass"), sigma.lStarAlpha(), sigma.lStarQtarm(), sigma.pt(), sigma.sigma0Mass());
       }
 
     } else {
@@ -1236,15 +1247,14 @@ struct sigmaanalysis {
 
       histos.fill(HIST(MainDir[mode]) + HIST("/ASigma0/hMass"), sigma.sigma0Mass());
       histos.fill(HIST(MainDir[mode]) + HIST("/ASigma0/hPt"), sigma.pt());
-      histos.fill(HIST(MainDir[mode]) + HIST("/ASigma0/hY"), sigma.sigma0Y());
+      histos.fill(HIST(MainDir[mode]) + HIST("/ASigma0/hY"), rapidity);
       histos.fill(HIST(MainDir[mode]) + HIST("/ASigma0/hRadius"), sigma.radius());
       histos.fill(HIST(MainDir[mode]) + HIST("/ASigma0/h2dRadiusVspT"), sigma.radius(), sigma.pt());
       histos.fill(HIST(MainDir[mode]) + HIST("/ASigma0/hDCAPairDau"), sigma.dcadaughters());
       histos.fill(HIST(MainDir[mode]) + HIST("/ASigma0/h3dMass"), centrality, sigma.pt(), sigma.sigma0Mass());
       histos.fill(HIST(MainDir[mode]) + HIST("/ASigma0/h3dOPAngleVsMass"), sigma.opAngle(), sigma.pt(), sigma.sigma0Mass());
       if (doArm) {
-        histos.fill(HIST(MainDir[mode]) + HIST("/ASigma0/h3dAlphaVsMass"), sigma.lStarAlpha(), sigma.pt(), sigma.sigma0Mass());
-        histos.fill(HIST(MainDir[mode]) + HIST("/ASigma0/h3dQtarmVsMass"), sigma.lStarQtarm(), sigma.pt(), sigma.sigma0Mass());
+        histos.fill(HIST(MainDir[mode]) + HIST("/ASigma0/h4dAlphaVsQtarmVsMass"), sigma.lStarAlpha(), sigma.lStarQtarm(), sigma.pt(), sigma.sigma0Mass());
       }
     }
 
@@ -1303,8 +1313,7 @@ struct sigmaanalysis {
           histos.fill(HIST(MainDir[mode]) + HIST("/MC/Sigma0/hMass"), sigma.sigma0Mass());
           histos.fill(HIST(MainDir[mode]) + HIST("/MC/Sigma0/h3dMass"), centrality, sigma.mcpt(), sigma.sigma0Mass());
           if (doArm) {
-            histos.fill(HIST(MainDir[mode]) + HIST("/MC/Sigma0/h3dAlphaVsMass"), sigma.lStarAlpha(), sigma.mcpt(), sigma.sigma0Mass());
-            histos.fill(HIST(MainDir[mode]) + HIST("/MC/Sigma0/h3dQtarmVsMass"), sigma.lStarQtarm(), sigma.mcpt(), sigma.sigma0Mass());
+            histos.fill(HIST(MainDir[mode]) + HIST("/MC/Sigma0/h4dAlphaVsQtarmVsMass"), sigma.lStarAlpha(), sigma.lStarQtarm(), sigma.mcpt(), sigma.sigma0Mass());
           }
 
           histos.fill(HIST(MainDir[mode]) + HIST("/MC/Sigma0/hMCProcess"), sigma.mcprocess());
@@ -1324,8 +1333,7 @@ struct sigmaanalysis {
           histos.fill(HIST(MainDir[mode]) + HIST("/MC/ASigma0/hMass"), sigma.sigma0Mass());
           histos.fill(HIST(MainDir[mode]) + HIST("/MC/ASigma0/h3dMass"), centrality, sigma.mcpt(), sigma.sigma0Mass());
           if (doArm) {
-            histos.fill(HIST(MainDir[mode]) + HIST("/MC/ASigma0/h3dAlphaVsMass"), sigma.lStarAlpha(), sigma.mcpt(), sigma.sigma0Mass());
-            histos.fill(HIST(MainDir[mode]) + HIST("/MC/ASigma0/h3dQtarmVsMass"), sigma.lStarQtarm(), sigma.mcpt(), sigma.sigma0Mass());
+            histos.fill(HIST(MainDir[mode]) + HIST("/MC/ASigma0/h4dAlphaVsQtarmVsMass"), sigma.lStarAlpha(), sigma.lStarQtarm(), sigma.mcpt(), sigma.sigma0Mass());
           }
 
           histos.fill(HIST(MainDir[mode]) + HIST("/MC/ASigma0/hMCProcess"), sigma.mcprocess());
@@ -1881,6 +1889,23 @@ struct sigmaanalysis {
     }
   }
 
+  // ______________________________________________________
+  // Simulated processing in Run 2 (subscribes to MC information too)
+  void processAnalysedCollisions(aod::StraSelections const& straSelections)
+  {
+    for (auto const& straSelection : straSelections) {
+      // Event selection criteria
+      histos.get<TH1>(HIST("hEventPreSelection"))->AddBinContent(1, straSelection.totalNbrOfCollisions() /* all collisions */);
+      histos.get<TH1>(HIST("hEventPreSelection"))->AddBinContent(2, straSelection.totalIsTriggerTVXCollisions() /* preselected IsTriggerTVX collisions */);
+      histos.get<TH1>(HIST("hEventPreSelection"))->AddBinContent(3, straSelection.totalNoITSROFBorderCollisions() /* + preselected NoITSROF collisions */);
+      histos.get<TH1>(HIST("hEventPreSelection"))->AddBinContent(4, straSelection.totalNoTFBorderCollisions() /* + preselected NoTF collisions */);
+      histos.get<TH1>(HIST("hEventPreSelection"))->AddBinContent(5, straSelection.totalIsGoodZvtxCollisions() /* + preselected |Zvtx| < X cm collisions */);
+      histos.get<TH1>(HIST("hEventPreSelection"))->AddBinContent(6, straSelection.totalNoSBPileupCollisions() /* + preselected NoSameBunchPileup collisions */);
+      histos.get<TH1>(HIST("hEventPreSelection"))->AddBinContent(7, straSelection.totalIsGoodRCTCollisions() /* + preselected Good RCT collisions */);
+      histos.get<TH1>(HIST("hEventPreSelection"))->AddBinContent(8, straSelection.totalNbrOfSelCollisions() /* total number of preselected collisions */);
+    }
+  }
+
   void processRealData(soa::Join<aod::StraCollisions, aod::StraCents, aod::StraEvSels, aod::StraEvSelExtras, aod::StraStamps> const& collisions, Sigma0s const& fullSigma0s)
   {
     analyzeRecoeSigma0s(collisions, fullSigma0s);
@@ -1933,6 +1958,7 @@ struct sigmaanalysis {
   PROCESS_SWITCH(sigmaanalysis, processPi0RealData, "Do real data analysis for pi0 QA", false);
   PROCESS_SWITCH(sigmaanalysis, processPi0MonteCarlo, "Do Monte-Carlo-based analysis for pi0 QA", false);
   PROCESS_SWITCH(sigmaanalysis, processPi0GeneratedRun3, "process MC generated Run 3 for pi0 QA", false);
+  PROCESS_SWITCH(sigmaanalysis, processAnalysedCollisions, "process filtered events for bookkeeping", false);
 };
 
 WorkflowSpec defineDataProcessing(ConfigContext const& cfgc)
